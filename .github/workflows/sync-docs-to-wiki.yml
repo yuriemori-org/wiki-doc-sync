@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'doc/**'  # docフォルダの変更を監視
+      - 'doc/**'
 
 jobs:
   sync-repo-to-wiki:
@@ -16,12 +16,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Clone Wiki Repository # Wikiリポジトリをクローン
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git clone https://github.com/${{ github.repository }}.wiki.git wiki
+        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki
 
-    - name: Sync docs to Wiki # docフォルダをWikiに同期. docフォルダにないファイルは削除し、完全同期する
+    - name: Sync docs to Wiki # docフォルダをWikiに同期
       run: |
         rsync -av --delete doc/ wiki/
 
