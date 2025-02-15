@@ -14,6 +14,11 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+    
+    - name: Set up Git # GitHub Actioonsがコミットできるようにgit configを構成
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
     - name: Clone Wiki Repository # Wikiリポジトリをクローン
       run: |
