@@ -31,7 +31,7 @@ jobs:
         git add .
         if [[ -n "$(git status --porcelain)" ]]; then
           git commit -m "Sync docs from repository to Wiki"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git HEAD:main
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git HEAD:master
         else
           echo "No changes detected."
         fi
