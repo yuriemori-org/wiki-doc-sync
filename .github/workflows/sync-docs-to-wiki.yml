@@ -15,23 +15,19 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
     
-    - name: Set up Git # GitHub Actioonsがコミットできるようにgit configを構成
+    - name: Set up Git # GitHub Actionsがコミットできるようにgit configを構成
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
     - name: Clone Wiki Repository # Wikiリポジトリをクローン
       run: |
-        git clone https://github.com/${{ github.repository }}.wiki.git
-      env:
-       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki-repo
 
     - name: Sync docs to Wiki # docフォルダをWikiに同期
       run: |
-        rsync -av --delete doc/ wiki/
-
-        # 変更があった場合のみ同期
-        cd wiki
+        rsync -av --delete doc/ wiki-repo/
+        cd wiki-repo
         git add .
         if [[ -n "$(git status --porcelain)" ]]; then
           git commit -m "Sync docs from repository to Wiki"
