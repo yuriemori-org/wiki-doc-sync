@@ -1,0 +1,36 @@
+name: Sync Docs to Wiki
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'doc/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Sync docs to Wiki
+        run: |
+          # Gitのユーザー名とメールアドレスを設定
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Wikiリポジトリをクローン
+          git clone https://github.com/${{ github.repository }}.wiki.git
+          
+          # docフォルダの内容をWikiリポジトリに同期
+          rsync -av --delete doc/ $(basename ${{ github.repository }}.wiki.git)/
+          
+          # Wikiリポジトリに移動して変更をコミット
+          cd $(basename ${{ github.repository }}.wiki.git)
+          git add .
+          git commit -m "Sync docs from main repository"
+          
+          # 変更をWikiリポジトリにプッシュ
+          git push
