@@ -1,2 +1,10 @@
 # wiki-doc-sync
-WikiとDesign docの同期、Design as Codeの検証
+WikiとDesign docの同期、Design as Codeの検証をするリポジトリ
+
+## docフォルダとWikiへの同期
+
+`doc`フォルダ配下のファイルが更新されると、このリポジトリのWikiに内容が同期されます。同期は`main`ブランチの`doc`フォルダ配下に変更が発生したときに行われます。
+
+## 実装ステップと運用フロー
+
+実装ステップと運用フローの詳細については、`doc`フォルダ内の`wikiの運用フロー.md`を参照してください。
