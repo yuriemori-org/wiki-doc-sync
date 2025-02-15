@@ -17,7 +17,9 @@ jobs:
 
     - name: Clone Wiki Repository # Wikiリポジトリをクローン
       run: |
-        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki
+        git clone https//github.com/${{ github.repository }}.wiki.git wiki
+      env:
+       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     - name: Sync docs to Wiki # docフォルダをWikiに同期
       run: |
