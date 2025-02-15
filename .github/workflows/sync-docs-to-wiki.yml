@@ -5,32 +5,32 @@ on:
     branches:
       - main
     paths:
-      - 'doc/**'
+      - 'doc/**'  # docフォルダの変更を監視
 
 jobs:
-  sync:
+  sync-repo-to-wiki:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout Repository
+      uses: actions/checkout@v2
 
-      - name: Sync docs to Wiki
-        run: |
-          # Gitのユーザー名とメールアドレスを設定
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          # Wikiリポジトリをクローン
-          git clone https://github.com/${{ github.repository }}.wiki.git
-          
-          # docフォルダの内容をWikiリポジトリに同期
-          rsync -av --delete doc/ $(basename ${{ github.repository }}.wiki.git)/
-          
-          # Wikiリポジトリに移動して変更をコミット
-          cd $(basename ${{ github.repository }}.wiki.git)
-          git add .
-          git commit -m "Sync docs from main repository"
-          
-          # 変更をWikiリポジトリにプッシュ
+    - name: Clone Wiki Repository # Wikiリポジトリをクローン
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git clone https://github.com/${{ github.repository }}.wiki.git wiki
+
+    - name: Sync docs to Wiki # docフォルダをWikiに同期. docフォルダにないファイルは削除し、完全同期する
+      run: |
+        rsync -av --delete doc/ wiki/
+
+        # 変更があった場合のみ同期
+        cd wiki
+        git add .
+        if [[ -n "$(git status --porcelain)" ]]; then
+          git commit -m "Sync docs from repository to Wiki"
           git push
+        else
+          echo "No changes detected."
+        fi
